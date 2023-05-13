@@ -524,7 +524,7 @@
         pjp: 'jpeg',
         svg: 'svg+xml'
       };
-      return global$6.hasOwn(mimeOverrides, lowerExt) ? 'image/' + mimeOverrides[lowerExt] : 'image/' + lowerExt;
+      return global$6.hasOwn(mimeOverrides, lowerExt) ? 'media/' + mimeOverrides[lowerExt] : 'media/' + lowerExt;
     };
 
     var isWordContent = function (content) {
@@ -1094,7 +1094,7 @@
     var isImage = function (editor) {
       var allowedExtensions = getAllowedImageFileTypes(editor);
       return function (file) {
-        return startsWith(file.type, 'image/') && exists(allowedExtensions, function (extension) {
+        return startsWith(file.type, 'media/') && exists(allowedExtensions, function (extension) {
           return getImageMimeType(extension) === file.type;
         });
       };

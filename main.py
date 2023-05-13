@@ -3,12 +3,14 @@ from random import choice
 import uvicorn
 from faker import Faker
 from fastapi import FastAPI
+from sqlalchemy import update
 from starlette import status
 from starlette.exceptions import HTTPException
 from starlette.responses import RedirectResponse
 from starlette.staticfiles import StaticFiles
 
 from apps import models
+from apps.models import Base
 from apps.routers import api, auth, product_api
 from config import manager, templates
 from database import get_db, engine
@@ -41,11 +43,12 @@ manager.useRequest(app)
 def load_user(email: str):
     db = next(get_db())
     user = db.query(models.Users).where(models.Users.email == email, models.Users.is_active).first()
+    db.close()
     return user
 
 
-class NotAuthenticatedException(Exception):
-    pass
+# class NotAuthenticatedException(Exception):
+#     pass
 
 
 def exc_handler(request, exc):
@@ -68,14 +71,16 @@ app.mount("/media", StaticFiles(directory='media'), name='media')
 
 @app.on_event("startup")
 def startup():
+    # Base.metadata.drop_all(engine)
+    # Base.metadata.create_all(engine)
     app.include_router(api)
     app.include_router(auth)
     app.include_router(product_api)
 
     # db = next(get_db())
-    # # query = update(models.Users).where(models.Users.id == 1).values(name='123')
-    # # db.execute(query)
-    # # db.commit()
+    # query = update(models.Users).where(models.Users.id == 1).values(name='123')
+    # db.execute(query)
+    # db.commit()
     #
     # models.Base.metadata.drop_all(engine)
     # models.Base.metadata.create_all(engine)

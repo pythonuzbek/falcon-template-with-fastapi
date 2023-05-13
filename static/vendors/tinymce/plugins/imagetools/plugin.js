@@ -410,13 +410,13 @@
         xhr.onerror = function () {
           var _this = this;
           var corsError = function () {
-            var obj = new Error('No access to download image');
+            var obj = new Error('No access to download media');
             obj.code = 18;
             obj.name = 'SecurityError';
             return obj;
           };
           var genericError = function () {
-            return new Error('Error ' + _this.status + ' downloading image');
+            return new Error('Error ' + _this.status + ' downloading media');
           };
           reject(this.status === 0 ? corsError() : genericError());
         };
@@ -830,7 +830,7 @@
     var friendlyServiceErrors = [
       {
         type: 'not_found',
-        message: 'Failed to load image.'
+        message: 'Failed to load media.'
       },
       {
         type: 'key_missing',
@@ -1116,7 +1116,7 @@
     };
     var getSelectedImage = function (editor) {
       var elem = editor.selection.getNode();
-      var figureElm = editor.dom.getParent(elem, 'figure.image');
+      var figureElm = editor.dom.getParent(elem, 'figure.media');
       if (figureElm !== null && isFigure(editor, figureElm)) {
         return getFigureImg(figureElm);
       } else if (isImage(editor, elem)) {
@@ -1230,7 +1230,7 @@
       return function () {
         var imgOpt = getSelectedImage(editor);
         return imgOpt.fold(function () {
-          displayError(editor, 'Could not find selected image');
+          displayError(editor, 'Could not find selected media');
         }, function (img) {
           return editor._scanForImages().then(function () {
             return findBlob(editor, img.dom);
@@ -1447,7 +1447,7 @@
         onSetup: onSetup
       });
       editor.ui.registry.addButton('editimage', {
-        tooltip: 'Edit image',
+        tooltip: 'Edit media',
         icon: 'edit-image',
         onAction: cmd('mceEditImage'),
         onSetup: onSetup
@@ -1461,7 +1461,7 @@
         update: function (element) {
           return getEditableImage(editor, element).map(function (_) {
             return {
-              text: 'Edit image',
+              text: 'Edit media',
               icon: 'edit-image',
               onAction: cmd('mceEditImage')
             };

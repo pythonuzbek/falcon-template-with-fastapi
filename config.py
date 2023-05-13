@@ -1,10 +1,31 @@
 import os
+import urllib
 
 from dotenv import load_dotenv
 from fastapi_login import LoginManager
 from starlette.templating import Jinja2Templates
+from fastapi import Request
+
+
+class CustomURLProcessor:
+    def __int__(self):
+        self.path = ''
+        self.request = None
+
+    def url_for(self, request: Request, name: str, **params: str):
+        self.path = request.url_for(name, **params)
+        self.request = request
+        return self
+
+    def include_query_params(self, **params: str):
+        parsed = list(urllib.parse.urlparse(self.path))
+        parsed[4] = urllib.parse.urlencode(params)
+        return urllib.parse.urlunparse(parsed)
+
 
 templates = Jinja2Templates(directory="templates")
+templates.env.globals['CustomURLProcessor'] = CustomURLProcessor
+
 
 load_dotenv('.env')
 
@@ -22,7 +43,7 @@ class Settings:
 
     SECRET_KEY: str = os.getenv("SECRET_KEY")
     ALGORITHM = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES = 30  # in mins
+    ACCESS_TOKEN_EXPIRE_Minutes = 3600  # in mins
     ACTIVATE_TOKEN_TIMEOUT = 60 * 60  # in seconds
 
     TEST_USER_EMAIL = "test@example.com"

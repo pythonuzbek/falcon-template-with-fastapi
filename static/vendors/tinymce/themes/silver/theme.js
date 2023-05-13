@@ -17015,7 +17015,7 @@
           tag: 'input',
           attributes: {
             type: 'file',
-            accept: 'image/*'
+            accept: 'media/*'
           },
           styles: { display: 'none' }
         },
@@ -17066,13 +17066,13 @@
                 {
                   dom: {
                     tag: 'p',
-                    innerHtml: providersBackstage.translate('Drop an image here')
+                    innerHtml: providersBackstage.translate('Drop an media here')
                   }
                 },
                 Button.sketch({
                   dom: {
                     tag: 'button',
-                    innerHtml: providersBackstage.translate('Browse for an image'),
+                    innerHtml: providersBackstage.translate('Browse for an media'),
                     styles: { position: 'relative' },
                     classes: [
                       'tox-button',
@@ -19028,8 +19028,8 @@
       var panelDom = {
         tag: 'div',
         classes: [
-          'tox-image-tools__toolbar',
-          'tox-image-tools-edit-panel'
+          'tox-media-tools__toolbar',
+          'tox-media-tools-edit-panel'
         ]
       };
       var noop$1 = noop;
@@ -19106,7 +19106,7 @@
         components: cropPanelComponents.map(function (mem) {
           return mem.asSpec();
         }),
-        containerBehaviours: derive$1([config('image-tools-crop-buttons-events', [
+        containerBehaviours: derive$1([config('media-tools-crop-buttons-events', [
             run$1(external.disable(), function (comp, _se) {
               disableAllComponents(cropPanelComponents, comp);
             }),
@@ -19146,7 +19146,7 @@
         components: resizePanelComponents.map(function (mem) {
           return mem.asSpec();
         }),
-        containerBehaviours: derive$1([config('image-tools-resize-buttons-events', [
+        containerBehaviours: derive$1([config('media-tools-resize-buttons-events', [
             run$1(external.disable(), function (comp, _se) {
               disableAllComponents(resizePanelComponents, comp);
             }),
@@ -19190,7 +19190,7 @@
         components: flipRotateComponents.map(function (mem) {
           return mem.asSpec();
         }),
-        containerBehaviours: derive$1([config('image-tools-fliprotate-buttons-events', [
+        containerBehaviours: derive$1([config('media-tools-fliprotate-buttons-events', [
             run$1(external.disable(), function (comp, _se) {
               disableAllComponents(flipRotateComponents, comp);
             }),
@@ -19263,7 +19263,7 @@
           components: filterPanelComponents.map(function (mem) {
             return mem.asSpec();
           }),
-          containerBehaviours: derive$1([config('image-tools-filter-panel-buttons-events', [
+          containerBehaviours: derive$1([config('media-tools-filter-panel-buttons-events', [
               run$1(external.disable(), function (comp, _se) {
                 disableAllComponents(filterPanelComponents, comp);
               }),
@@ -19761,7 +19761,7 @@
       var memBg = record({
         dom: {
           tag: 'div',
-          classes: ['tox-image-tools__image-bg'],
+          classes: ['tox-media-tools__image-bg'],
           attributes: { role: 'presentation' }
         }
       });
@@ -19887,7 +19887,7 @@
       var container = Container.sketch({
         dom: {
           tag: 'div',
-          classes: ['tox-image-tools__image']
+          classes: ['tox-media-tools__image']
         },
         components: [
           memBg.asSpec(),
@@ -19899,7 +19899,7 @@
           },
           {
             dom: { tag: 'div' },
-            behaviours: derive$1([config('image-panel-crop-events', [runOnAttached(function (comp) {
+            behaviours: derive$1([config('media-panel-crop-events', [runOnAttached(function (comp) {
                   memContainer.getOpt(comp).each(function (container) {
                     var el = container.element.dom;
                     var cRect = CropRect.create({
@@ -19937,7 +19937,7 @@
         ],
         containerBehaviours: derive$1([
           Replacing.config({}),
-          config('image-panel-events', [runOnAttached(function (comp) {
+          config('media-panel-events', [runOnAttached(function (comp) {
               updateSrc(comp, initialUrl);
             })])
         ])
@@ -19997,8 +19997,8 @@
         dom: {
           tag: 'div',
           classes: [
-            'tox-image-tools__toolbar',
-            'tox-image-tools__sidebar'
+            'tox-media-tools__toolbar',
+            'tox-media-tools__sidebar'
           ]
         },
         components: [
@@ -20300,7 +20300,7 @@
               }
             }
           }),
-          config('image-tools-events', [
+          config('media-tools-events', [
             run$1(internal.undo(), undo),
             run$1(internal.redo(), redo),
             run$1(internal.zoom(), zoom),
@@ -25344,7 +25344,7 @@
       },
       insert: {
         title: 'Insert',
-        items: 'image link media addcomment pageembed template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime'
+        items: 'media link media addcomment pageembed template codesample inserttable | charmap emoticons hr | pagebreak nonbreaking anchor toc | insertdatetime'
       },
       format: {
         title: 'Format',
@@ -28939,7 +28939,7 @@
       return editor.getParam('contextmenu') === false;
     };
     var getContextMenu = function (editor) {
-      return getMenuItems(editor, 'contextmenu', 'link linkchecker image imagetools table spellchecker configurepermanentpen');
+      return getMenuItems(editor, 'contextmenu', 'link linkchecker media imagetools table spellchecker configurepermanentpen');
     };
     var getAvoidOverlapSelector = function (editor) {
       return editor.getParam('contextmenu_avoid_overlap', '', 'string');

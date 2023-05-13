@@ -103,3 +103,61 @@ class ProductForm(BaseModel):
             images: list[UploadFile] = File(...)
     ):
         return cls(name=name, description=description, price=price, category_id=category_id, images=images)
+
+
+class EditForm(BaseModel):
+    name: str
+    email: str
+    image: UploadFile
+
+    @classmethod
+    def as_form(
+            cls,
+            name: str = Form(...),
+            email: str = Form(...),
+            image: UploadFile = File(...),
+
+    ):
+        return cls(name=name, email=email,
+                   image=image)
+
+
+class ForgotPassword(BaseModel):
+    password: str
+    confirm_password: str
+
+    def is_valid(self, db: Session):
+        errors = []
+        if self.confirm_password != self.password:
+            errors.append('Password did not match!')
+        self.confirm_password = None
+        self.password = Hasher.get_password_hash(self.password)
+        return errors
+
+    @classmethod
+    def as_form(
+            cls,
+            password: str = Form(...),
+            confirm_password: str = Form(...)
+    ):
+        return cls(password=password, confirm_password=confirm_password)
+
+
+class ReviewForm(BaseModel):
+    title: str
+    text: str
+
+    @classmethod
+    def as_form(cls,
+                title: str = Form(...),
+                text: str = Form(...)):
+        return cls(title=title, text=text)
+
+
+class StarForm(BaseModel):
+    star: int
+
+    @classmethod
+    def as_form(cls,
+                star: int = Form(...)):
+        return cls(star=star)

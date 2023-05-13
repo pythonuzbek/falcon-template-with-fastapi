@@ -1,10 +1,12 @@
 from fastapi import APIRouter, Request, Depends, Response, HTTPException
+from sqlalchemy import update
 from sqlalchemy.orm import Session
 from starlette import status
 from starlette.background import BackgroundTasks
 from starlette.responses import RedirectResponse
 
 from apps import forms, models
+from apps.forms import ForgotPassword
 from apps.utils.send_email import send_verification_email, decode_data
 from apps.utils.token import check_token
 from config import manager, templates
@@ -67,6 +69,36 @@ def auth_login(
         return resp
 
 
+
+@auth.get('/forgot_password', name='forgot_password')
+def forgot_password(request: Request):
+    context = {
+        'request': request
+    }
+    return templates.TemplateResponse('auth/forgot_password.html', context)
+
+
+@auth.post('/forgot_password', name='forgot_password')
+def forgot_password(request: Request, background_task: BackgroundTasks,
+                    form: ForgotPassword = Depends(ForgotPassword.as_form),
+                    db: Session = Depends(get_db)):
+    if errors := form.is_valid(db):
+        context = {
+            'errors': errors,
+            'request': request
+        }
+        return templates.TemplateResponse('auth/forgot_password.html', context)
+    else:
+        data = form.dict(exclude_none=True) # noqa
+        user = models.Users(**data) # noqa
+        query = update(models.Users).where(models.Users.id == request.state.user.id).values(**data)
+        db.execute(query)
+        host = f'{request.url.scheme}://{request.url.netloc}/activate/'
+        background_task.add_task(send_verification_email, user, host)
+        db.commit()
+        return RedirectResponse('/login', status.HTTP_303_SEE_OTHER)
+
+
 @auth.get('/register', name='register')
 def register_page(request: Request):
     context = {
@@ -89,7 +121,7 @@ def register_page(
         }
         return templates.TemplateResponse('auth/register.html', context)
     else:
-        data = form.dict(exclude_none=True)
+        data = form.dict(exclude_none=True) # noqa
         user = models.Users(**data)
         db.add(user)
         host = f'{request.url.scheme}://{request.url.netloc}/activate/'
@@ -98,11 +130,15 @@ def register_page(
         return RedirectResponse('/login', status.HTTP_303_SEE_OTHER)
 
 
+
+
+# https://localhost:8000/activate/idy1g/e26781dguc62gug176dg716gs7126s6712g
 # https://localhost:8000/activate/idy1g/e26781dguc62gug176dg716gs7126s6712g
 # https://localhost:8000/activate/5/token
 
-'''
 
+
+'''
 author product qoshish joyida
 
 activate user ✅, forgot password

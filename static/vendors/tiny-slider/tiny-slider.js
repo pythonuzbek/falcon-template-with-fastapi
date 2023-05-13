@@ -71,7 +71,7 @@ function setFakeBody (body) {
   var docOverflow = '';
   if (body.fake) {
     docOverflow = docElement.style.overflow;
-    //avoid crashing IE8, if background image is used
+    //avoid crashing IE8, if background media is used
     body.style.background = '';
     //Safari 5.13/5.1.4 OSX stops loading if ::-webkit-scrollbar is used and scrollbars are visible
     body.style.overflow = docElement.style.overflow = 'hidden';
@@ -1207,7 +1207,7 @@ var tns = function(options) {
 
         if (!lazyload) {
           // not data img
-          if (src && src.indexOf('data:image') < 0) {
+          if (src && src.indexOf('data:media') < 0) {
             img.src = '';
             addEvents(img, imgEvents);
             addClass(img, 'loading');
@@ -1259,7 +1259,7 @@ var tns = function(options) {
 
 
   function initSliderTransformCore () {
-    // run Fn()s which are rely on image loading
+    // run Fn()s which are rely on media loading
     if (!horizontal || autoWidth) {
       setSlidePositions();
 
@@ -2299,9 +2299,9 @@ var tns = function(options) {
     // execute callback function if all images are complete
     if (imgsComplete) { return cb(); }
 
-    // check image classes
+    // check media classes
     imgs.forEach(function (img, index) {
-      if (!lazyload && img.complete) { imgCompleted(img); } // Check image.complete
+      if (!lazyload && img.complete) { imgCompleted(img); } // Check media.complete
       if (hasClass(img, imgCompleteClass)) { imgs.splice(index, 1); }
     });
 
